@@ -1,0 +1,63 @@
+---
+title: "web_scrapping"
+author: "Alexis Laks"
+date: "11 janvier 2019"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(lubridate)
+try <- read.csv("les_trois_forets.csv")
+try <- try %>%
+  select(-selection1_name) %>% 
+  rename(Commentaire = selection1_selection2) %>% 
+  rename(Date = selection1_selection5) %>% 
+  mutate(Date = substr(Date, start = 18, stop = 40),
+         Commentaire = as.character(Commentaire))
+levels(as.factor(try$Date))
+```
+
+```{r}
+dates <- data.frame(c("janvier 2019","février 2019","mars 2019","avril 2019","mai 2019","juin 2019","juillet 2019","août 2019","septembre 2019","octobre 2019","novembre 2019","décembre 2019","janvier 2018","février 2018","mars 2018","avril 2018","mai 2018","juin 2018","juillet 2018","août 2018","septembre 2018","octobre 2018","novembre 2018","décembre 2018","janvier 2017","février 2017","mars 2017","avril 2017","mai 2017","juin 2017","juillet 2017","août 2017","septembre 2017","octobre 2017","novembre 2017","décembre 2017","janvier 2016","février 2016","mars 2016","avril 2016","mai 2016","juin 2016","juillet 2016","août 2016","septembre 2016","octobre 2016","novembre 2016","décembre 2016","janvier 2015","février 2015","mars 2015","avril 2015","mai 2015","juin 2015","juillet 2015","août 2015","septembre 2015","octobre 2015","novembre 2015","décembre 2015","janvier 2014","février 2014","mars 2014","avril 2014","mai 2014","juin 2014","juillet 2014","août 2014","septembre 2014","octobre 2014","novembre 2014","décembre 2014"),c("2019-01-01","2019-02-01","2019-03-01","2019-04-01","2019-05-01","2019-06-01","2019-07-01","2019-08-01","2019-09-01","2019-10-01","2019-11-01","2019-12-01","2018-01-01","2018-02-01","2018-03-01","2018-04-01","2018-05-01","2018-06-01","2018-07-01","2018-08-01","2018-09-01","2018-10-01","2018-11-01","2018-12-01","2017-01-01","2017-02-01","2017-03-01","2017-04-01","2017-05-01","2017-06-01","2017-07-01","2017-08-01","2017-09-01","2017-10-01","2017-11-01","2017-12-01","2016-01-01","2016-02-01","2016-03-01","2016-04-01","2016-05-01","2016-06-01","2016-07-01","2016-08-01","2016-09-01","2016-10-01","2016-11-01","2016-12-01","2015-01-01","2015-02-01","2015-03-01","2015-04-01","2015-05-01","2015-06-01","2015-07-01","2015-08-01","2015-09-01","2015-10-01","2015-11-01","2015-12-01","2014-01-01","2014-02-01","2014-03-01","2014-04-01","2014-05-01","2014-06-01","2014-07-01","2014-08-01","2014-09-01","2014-10-01","2014-11-01","2014-12-01"))
+colnames(dates) <- c("Date","Date_format")
+dates <- dates %>% 
+  mutate(Date = as.character(Date))
+write.csv(dates, "dates_transl.csv", row.names = FALSE)
+
+try %>% left_join(dates, by = "Date")
+try %>% glimpse
+dates %>% glimpse
+dates
+```
+
+
+```{r}
+try2 <- read.csv("les_bois_francs.csv")
+
+try2 <- try2 %>%
+  rename(Commentaire = Mainextract_Commentaire) %>% 
+  rename(Date = Mainextract_Date) %>% 
+  mutate(Date = substr(Date, start = 18, stop = 40),
+         Commentaire = as.character(Commentaire))
+
+dates <- read.csv("dates_transl.csv")
+try2 <- try2 %>% left_join(dates, by = "Date")
+```
+
+It's in french and the library is in english...
+
+```{r}
+library("tidytext")q
+get_sentiments("nrc")
+try2 %>% 
+  mutate(Date_format = ymd(Date_format)) %>% 
+  unnest_tokens(word,Commentaire) %>% 
+  inner_join(get_sentiments("nrc")) %>%
+  mutate(Date_format = lubridate::floor_date(Date_format, unit = "hour")) %>% 
+  group_by(Date_format) %>%
+  count(sentiment)
+```
+
+
+

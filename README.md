@@ -1,4 +1,4 @@
-# CenterParcs_NLP_SentimentAnalysis_Webscraping
+# CenterParcs NLP Sentiment-Analysis Webscraping
 
 This project was conducted in collaboration with Capgemini consulting during my Msc at Ecole Polytechnique.
 We were to conduct a thorough analysis of customer reviews on Centerparc facilities.
